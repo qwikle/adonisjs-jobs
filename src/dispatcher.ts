@@ -14,9 +14,19 @@ export class Dispatcher {
     payload: any,
     options: JobsOptions & { queueName?: string } = {}
   ) {
+    // @ts-ignore
+    const config = this.app.config.get<ReturnType<typeof defineConfig>>('jobs', {}) as ReturnType<
+      typeof defineConfig
+    >
+
     let isClosure = !(
       typeof jobOrClosure === 'function' && /^class\s/.test(jobOrClosure.toString())
     )
+
+    if (isClosure && config.enableSerializedJob !== true) {
+      throw new Error('Closure jobs are not enabled')
+    }
+
     let job = isClosure ? ClosureJob : jobOrClosure
     payload = isClosure
       ? {
@@ -24,10 +34,6 @@ export class Dispatcher {
         }
       : payload
 
-    // @ts-ignore
-    const config = this.app.config.get<ReturnType<typeof defineConfig>>('jobs', {}) as ReturnType<
-      typeof defineConfig
-    >
     // @ts-ignore
     const queues = await this.app.container.make('jobs.queues')
     const queueName = options.queueName || config.queues[0]

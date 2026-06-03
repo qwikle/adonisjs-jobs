@@ -7,6 +7,8 @@ type Config = {
   options: JobsOptions
   workerOptions?: Omit<WorkerOptions, 'connection' | 'concurrency'>
 
+  enableSerializedJob?: boolean
+
   serialization?: {
     reducers?: Record<string, (value: any) => any>
     revivers?: Record<string, (value: any) => any>
