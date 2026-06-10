@@ -61,6 +61,7 @@ export default class JobsProvider {
     const queues = config.queues.reduce(
       (acc, name) => {
         const queue = new BullmqQueue(name, {
+          ...(config.queueOptions || {}),
           connection: config.connection,
           defaultJobOptions: config.options,
         })

@@ -1,10 +1,11 @@
-import type { ConnectionOptions, JobsOptions, WorkerOptions } from 'bullmq'
+import type { ConnectionOptions, JobsOptions, WorkerOptions, QueueOptions } from 'bullmq'
 
 type Config = {
   connection: ConnectionOptions
   queue: string
   queues: string[]
   options: JobsOptions
+  queueOptions?: Omit<QueueOptions, 'connection' | 'defaultJobOptions'>
   workerOptions?: Omit<WorkerOptions, 'connection' | 'concurrency'>
 
   enableSerializedJob?: boolean
